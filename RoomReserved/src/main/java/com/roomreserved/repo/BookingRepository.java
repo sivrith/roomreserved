@@ -1,4 +1,6 @@
 package com.roomreserved.repo;
+
+import jakarta.persistence.LockModeType;
 import com.roomreserved.model.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
