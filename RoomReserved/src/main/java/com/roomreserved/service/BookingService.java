@@ -32,9 +32,8 @@ public class BookingService {
   * Creates a temporary inventory hold. A hold is deliberately NOT a confirmed or paid booking.
   * The room row is locked before checking overlapping inventory so concurrent requests serialize.
   */
- @Transactional
- @Transactional
- public void expireHoldIfStillPending(Long bookingId) {
+@Transactional
+public void expireHoldIfStillPending(Long bookingId) {
   bookings.findByIdForUpdate(bookingId).ifPresent(booking -> {
    if ("PENDING".equals(booking.getStatus()) && booking.getHoldExpiresAt() != null
        && !booking.getHoldExpiresAt().isAfter(LocalDateTime.now())) {
