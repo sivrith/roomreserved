@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: roomreserved
+      POSTGRES_USER: roomreserved
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-me-before-use}
+    volumes:
+      - roomreserved_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U roomreserved -d roomreserved"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  app:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/roomreserved
+      DB_USERNAME: roomreserved
+      DB_PASSWORD: ${DB_PASSWORD:-change-me-before-use}
+      PORT: 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  roomreserved_db:
